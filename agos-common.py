@@ -10,46 +10,33 @@ import io, os, re, sys
 import subprocess, multiprocessing
 
 lock = multiprocessing.Lock()
-graphsetdir = 'graphset'
 resultdir = 'result'
 current_topology = ''
 
-def choose_graph(topology):
-    graphset = os.listdir(graphsetdir)
-    graphset_info = []
-    for graphname in graphset:
-        graph_params = graphname.split('.')
-        seed = graph_params[-2]
-        graph_params = graph_params[:-2]
-        graph_params = dict(zip(graph_params[::2], graph_params[1::2]))
-        graph_params['seed'] = seed
-        graphset_info.append(graph_params)
-
-    possible_graph = map(lambda t: t[1],
-                         filter(lambda t: t[0]['topology'] == topology,
-                                zip(graphset_info, graphset)))
-    if(not possible_graph):
-        return ''
-    graphfile = choice(list(possible_graph))
-    return os.path.join(graphsetdir, graphfile)
-
 def set_graph(topology):
-    graphfile = choose_graph(topology)
-    if(not graphfile):
-        return
-    # select graph file from graphset and get population
+    cmdopts = []
+    if(topology == 'rrg'):
+        cmdopts = ['-t', 'rr', '-k', '4', '-f', '0.9']
+    if(topology == 'sl'):
+        cmdopts = ['-t', 'sl']
+    if(topology == 'ba'):
+        cmdopts = ['-t', 'ba', '-k', '4']
+    if(not cmdopts):
+        print('topology %s not recoganized'%topology, file=stderr)
+        exit(-1)
+    cmd = ['./graphgen.out', '-N', '1000',
+           '-s', str(randint(0, 2**32-1))] + cmdopts
+
     global current_topology
     current_topology = topology
     global graphcache, population
-    graphfile = choose_graph(topology)
-    with open(graphfile, 'rb') as f:
-        graphcache = f.read()
+    graphcache = subprocess.check_output(cmd)
     (population,) = unpack('i', graphcache[:4])
 
 def result_path(**kwargs):
     return os.path.join(
         resultdir,
-        '.'.join(map(lambda kv: '.'.join(map(str, kv)),
+        ';'.join(map(lambda kv: '='.join(map(str, kv)),
                      sorted(kwargs.items(), key=lambda t: t[0])))\
         + '.' + strftime('%Y%m%d%H%M%S') + '.csv')
 
@@ -83,8 +70,9 @@ def run_experiment(benefit, beta, mutation_rate):
     if(not current_topology):
         return
     # building parameters
+    global population
     global total_sims, current_sim
-    init_cs = list(range(0, population+1))
+    init_cs = list(range(0, population+1, 100))
     args_list = [(benefit, beta, mutation_rate,
                   init_c, randint(0, 2**32-1))
                  for init_c in init_cs]
@@ -97,7 +85,7 @@ def run_experiment(benefit, beta, mutation_rate):
     Gnum = multiprocessing.Array(c_int, population+1)
 
     pool = multiprocessing.Pool()
-    pool.map(run_experiment_part, args_list)
+    map(run_experiment_part, args_list)
     pool.close()
 
     j = linspace(0, 1, population+1)
@@ -110,18 +98,18 @@ def run_experiment(benefit, beta, mutation_rate):
             map(lambda t: ','.join(map(str, t)), zip(j, Gnum, Gsum))))
 
 if __name__ == '__main__':
-    """
     # topology, benefit, beta, mutation_rate
     set_graph('rrg')
     for benefit in [1.005, 1.015]:
         run_experiment(benefit, 10, 1e-3)
+    exit(0)
     set_graph('sl')
     for benefit in [1.005, 1.015]:
         run_experiment(benefit, 10, 1e-3)
     set_graph('ba')
     for benefit in [1.15, 1.25, 1.35]:
         run_experiment(benefit, 0.1, 1e-3)
-    """
+
     # topology, benefit, beta, mutation_rate
     set_graph('rrg')
     for _ in range(2):
