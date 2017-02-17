@@ -6,6 +6,8 @@ CFLAGS=-Ofast -Wall
 
 .PHONY: all clean
 
+all: graphgen.out agos-common.out
+
 graphgen.out: graphgen.c
 	$(CC) $(CFLAGS) -o $@ $< -I$(IDIR) -L$(LDIR) $(LIBS)
 
