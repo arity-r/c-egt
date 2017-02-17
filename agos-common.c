@@ -24,7 +24,7 @@ struct arguments {
   double mutation_rate;
   int Lambda;
   int init_c;
-  unsigned long seed;
+  unsigned int seed;
 };
 
 static struct argp_option options[] = {
@@ -60,7 +60,7 @@ static error_t parse_opt(int key, char* arg, struct argp_state* state) {
     arguments->init_c = atoi(arg);
     break;
   case 's': /* seed */
-    arguments->seed = atol(arg);
+    arguments->seed = atoi(arg);
     break;
   default:
     return ARGP_ERR_UNKNOWN;
@@ -73,8 +73,6 @@ const char* bug_address = "";
 static const char args_doc[] = "";
 static const char doc[] = "";
 static struct argp argp = {options, parse_opt, args_doc, doc};
-
-void init_params(int argc, char* argv[]);
 
 int main(int argc, char* argv[]) {
   // initialize parameters, variables, result
@@ -93,6 +91,7 @@ int main(int argc, char* argv[]) {
       exit(-1);
     }
   }
+  srand(args.seed);
 
   benefit = args.benefit;
   beta = args.beta;
@@ -107,11 +106,13 @@ int main(int argc, char* argv[]) {
   // loading data
   assert(fread(&N, sizeof(int), 1, fp) == 1);
   assert(fread(&arraysize, sizeof(int), 1, fp) == 1);
-  int matrix[arraysize][arraysize];
+  //int matrix[arraysize][arraysize];
   int neighbors[arraysize][N-1];
   int degrees[arraysize];
+  /*
   assert(fread(&matrix, sizeof(int), arraysize*arraysize, fp)
          == arraysize*arraysize);
+  */
   assert(fread(&neighbors, sizeof(int), arraysize*(N-1), fp)
          == arraysize*(N-1));
   assert(fread(&degrees, sizeof(int), arraysize, fp) == arraysize);
@@ -201,26 +202,5 @@ int main(int argc, char* argv[]) {
   fwrite(Gsum, sizeof(double), N+1, stdout);
 
   return 0;
-}
-
-void init_params(int argc, char* argv[]) {
-  if(argc < 8) {
-    fprintf(stderr,
-            "%s graph benefit beta Lambda init_c mutation_rate seed\n",
-            argv[0]);
-    exit(-1);
-  }
-  filename = malloc(strlen(argv[1])+1);
-  strcpy(filename, argv[1]);
-  benefit = atof(argv[2]);
-  payoff_matrix[C][D] = 1. - benefit; // S
-  payoff_matrix[D][C] = benefit;      // T
-  payoff_matrix[C][C] = 1.;           // R
-  payoff_matrix[D][D] = 0.;           // P
-  beta = atof(argv[3]);
-  Lambda = atoi(argv[4]);
-  init_c = atoi(argv[5]);
-  mutation_rate = atof(argv[6]);
-  srand(atoi(argv[7]));
 }
 

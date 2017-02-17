@@ -151,7 +151,7 @@ int main(int argc, char* argv[]) {
   if(!args.output) fp = stdout;
   else fp = fopen(args.output, "wb");
   fwrite(&dim, sizeof(int), 2, fp);
-  fwrite(&matrix, sizeof(int), blocksize*blocksize, fp);
+  //fwrite(&matrix, sizeof(int), blocksize*blocksize, fp);
   fwrite(&neighbors, sizeof(int), blocksize*(V-1), fp);
   fwrite(&degrees, sizeof(int), blocksize, fp);
   if(args.output) fclose(fp);

@@ -72,7 +72,7 @@ def run_experiment(benefit, beta, mutation_rate):
     # building parameters
     global population
     global total_sims, current_sim
-    init_cs = list(range(0, population+1, 100))
+    init_cs = list(range(0, population+1))
     args_list = [(benefit, beta, mutation_rate,
                   init_c, randint(0, 2**32-1))
                  for init_c in init_cs]
@@ -85,7 +85,7 @@ def run_experiment(benefit, beta, mutation_rate):
     Gnum = multiprocessing.Array(c_int, population+1)
 
     pool = multiprocessing.Pool()
-    map(run_experiment_part, args_list)
+    pool.map(run_experiment_part, args_list)
     pool.close()
 
     j = linspace(0, 1, population+1)
@@ -99,31 +99,17 @@ def run_experiment(benefit, beta, mutation_rate):
 
 if __name__ == '__main__':
     # topology, benefit, beta, mutation_rate
-    set_graph('rrg')
-    for benefit in [1.005, 1.015]:
-        run_experiment(benefit, 10, 1e-3)
+    nsims = 3
+    for _ in range(nsims):
+        set_graph('rrg')
+        for mutation in [0, 1e-5, 1e-4, 1e-3, 1e-2]:
+            run_experiment(1.005, 10, mutation)
+    for _ in range(nsims):
+        set_graph('sl')
+        for mutation in [0, 1e-5, 1e-4, 1e-3, 1e-2]:
+            run_experiment(1.005, 10, mutation)
     exit(0)
-    set_graph('sl')
-    for benefit in [1.005, 1.015]:
-        run_experiment(benefit, 10, 1e-3)
-    set_graph('ba')
-    for benefit in [1.15, 1.25, 1.35]:
-        run_experiment(benefit, 0.1, 1e-3)
-
-    # topology, benefit, beta, mutation_rate
-    set_graph('rrg')
-    for _ in range(2):
-        for mutation in [1e-5, 1e-4, 1e-3, 1e-2]:
-            if(_ == 1 and mutation == 1e-3): continue
-            run_experiment(1.005, 10, mutation)
-    set_graph('sl')
-    for _ in range(2):
-        for mutation in [1e-5, 1e-4, 1e-3, 1e-2]:
-            if(_ == 1 and mutation == 1e-3): continue
-            run_experiment(1.005, 10, mutation)
-    set_graph('ba')
-    for _ in range(2):
-        for mutation in [1e-5, 1e-4, 1e-3, 1e-2]:
-            if(_ == 1 and mutation == 1e-3): continue
+    for _ in range(nsims):
+        set_graph('ba')
+        for mutation in [0, 1e-5, 1e-4, 1e-3, 1e-2]:
             run_experiment(1.25, 0.1, mutation)
-
