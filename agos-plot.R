@@ -39,10 +39,10 @@ for(topology in c('sl', 'rrg')) {
 }
 
 #result.data$mutation = as.factor(result.data$mutation)
-ggplot(result.data[result.data$benefit==1.005&result.data$topology=='rrg',], aes(j, G, colour=mutation)) +
-  ggtitle('Mutation Rate vs AGoS (on RRG)') +
-  #scale_x_continuous(expression(italic('j')), limits=c(0, 1), breaks=seq(0, 1, 0.2)) +
-  #scale_y_continuous(expression(italic('Gx10^-2')), breaks=seq(-2.0, 1.0, 1.0)) +
+ggplot(result.data[result.data$topology=='sl',], aes(j, G, colour=mutation)) +
+  ggtitle('SL (benefit=1.005, beta=10)') +
+  scale_x_continuous(expression(italic('j'))) +
+  scale_y_continuous(expression(italic('G'))) +
   #geom_smooth(se=F) +
   #geom_raster()
   #geom_point()

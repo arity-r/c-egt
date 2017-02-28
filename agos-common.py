@@ -99,7 +99,7 @@ def run_experiment(benefit, beta, mutation_rate):
 
 if __name__ == '__main__':
     # topology, benefit, beta, mutation_rate
-    nsims = 3
+    nsims = 1
     for _ in range(nsims):
         set_graph('rrg')
         for mutation in [0, 1e-5, 1e-4, 1e-3, 1e-2]:
