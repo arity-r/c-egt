@@ -15,26 +15,26 @@ make all
 ### Experiment
 
  1. On `agos-common.py`, Call `set_graph` to initialize network.
-```python
-set_graph('rrg') # valid parameter: 'rrg', 'sl', and 'ba'
-```
+ ```python
+ set_graph('rrg') # valid parameter: 'rrg', 'sl', and 'ba'
+ ```
 
  2. Call `run_experiment` with some parameters.
-```python
-#              benefit beta mutation
-run_experiment(1.005,  10,  0)
-```
+ ```python
+ #              benefit beta mutation
+ run_experiment(1.005,  10,  0)
+ ```
 
  3. Run `agos-common.py`
-```
-./agos-common.py
-``` 
+ ```
+ ./agos-common.py
+ ``` 
 
  4. After the script ends, result file(s) is created with following name.
-```
-benefit=<benefit>;beta=<beta>;mutation=<mutation>;topology=<topology>.<timestamp>.csv
-```
-For example, `benefit=1.005;beta=10;mutation=0;topology=rrg.20170217183418.csv`.
+ ```
+ benefit=<benefit>;beta=<beta>;mutation=<mutation>;topology=<topology>.<timestamp>.csv
+ ```
+ For example, `benefit=1.005;beta=10;mutation=0;topology=rrg.20170217183418.csv`.
 
 ### Result Format
 The following is some lines in a result file.
