@@ -13,9 +13,8 @@ make all
 ```
 
 ### Experiment
-On `agos-common.py`
 
- 1. Call `set_graph` to initialize network.
+ 1. On `agos-common.py`, Call `set_graph` to initialize network.
 ```python
 set_graph('rrg') # valid parameter: 'rrg', 'sl', and 'ba'
 ```
@@ -26,7 +25,12 @@ set_graph('rrg') # valid parameter: 'rrg', 'sl', and 'ba'
 run_experiment(1.005,  10,  0)
 ```
 
- 3. After simulation ends, a result file is created with following name.
+ 3. Run `agos-common.py`
+```
+./agos-common.py
+``` 
+
+ 4. After the script ends, result file(s) is created with following name.
 ```
 benefit=<benefit>;beta=<beta>;mutation=<mutation>;topology=<topology>.<timestamp>.csv
 ```
@@ -54,13 +58,13 @@ Third column means sum of time-dependent AGoS.
 `agos-plot.R` provides two functions (`as.nvparams` and `make.result`).
 To load result in `result` directory, run following commands.
 
-```R
-result.data = data.frame()
+```r
+result.data <- data.frame()
 for(mutation in c(0, 1e-5, 1e-4, 0.001, 0.01)) {
   # make a named vector as a set of parameters
-  nv = c(benefit=1.005, beta=10, mutation=mutation, topology='rrg')
+  nv <- c(benefit=1.005, beta=10, mutation=mutation, topology='rrg')
   # sort by name
-  nv = nv[order(names(nv))]
+  nv <- nv[order(names(nv))]
   # calculate result for given parameters and append to result.data
   result.data <- rbind(result.data, make.result(nv))
 }
@@ -68,6 +72,6 @@ for(mutation in c(0, 1e-5, 1e-4, 0.001, 0.01)) {
 
 Then, run following to plot result.
 
-```R
+```r
 ggplot(result.data, aes(j, G, colour=mutation)) + geom_line()
 ```
