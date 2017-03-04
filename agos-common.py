@@ -99,7 +99,8 @@ def run_experiment(benefit, beta, mutation_rate):
 
 if __name__ == '__main__':
     # topology, benefit, beta, mutation_rate
-    nsims = 1
+    nsims = 10
+    """
     for _ in range(nsims):
         set_graph('rrg')
         for mutation in [0, 1e-5, 1e-4, 1e-3, 1e-2]:
@@ -108,7 +109,7 @@ if __name__ == '__main__':
         set_graph('sl')
         for mutation in [0, 1e-5, 1e-4, 1e-3, 1e-2]:
             run_experiment(1.005, 10, mutation)
-    exit(0)
+    """
     for _ in range(nsims):
         set_graph('ba')
         for mutation in [0, 1e-5, 1e-4, 1e-3, 1e-2]:
