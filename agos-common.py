@@ -44,8 +44,17 @@ def run_experiment_part(args):
     global graphcache, population
     global Gsum, Gnum
     global total_sims, current_sim
+    global USE_AVERAGE_PAYOFF
+
+    exec_file = 'agos-common.out'
+    try:
+        if USE_AVERAGE_PAYOFF:
+            exec_file = 'agos-common-avr.out'
+    except:
+        pass
     benefit, beta, mutation_rate, init_c, seed = args
-    cmd = list(map(str, ['./agos-common.out',
+
+    cmd = list(map(str, ['./%s'%exec_file,
                          '-B', benefit, '-b', beta, '-m', mutation_rate,
                          '-t', '100000', '-c', init_c, '-s', seed]))
     p = subprocess.Popen(cmd,
@@ -99,8 +108,9 @@ def run_experiment(benefit, beta, mutation_rate):
 
 if __name__ == '__main__':
     # topology, benefit, beta, mutation_rate
-    nsims = 10
-    """
+    global USE_AVERAGE_PAYOFF
+    USE_AVERAGE_PAYOFF = True
+    nsims = 1
     for _ in range(nsims):
         set_graph('rrg')
         for mutation in [0, 1e-5, 1e-4, 1e-3, 1e-2]:
@@ -109,8 +119,8 @@ if __name__ == '__main__':
         set_graph('sl')
         for mutation in [0, 1e-5, 1e-4, 1e-3, 1e-2]:
             run_experiment(1.005, 10, mutation)
-    """
     for _ in range(nsims):
         set_graph('ba')
         for mutation in [0, 1e-5, 1e-4, 1e-3, 1e-2]:
             run_experiment(1.25, 0.1, mutation)
+

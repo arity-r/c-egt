@@ -156,6 +156,9 @@ int main(int argc, char* argv[]) {
         pu += payoff_matrix[su][sv];
       }
       payoffs[u] = pu;
+#ifdef USE_AVERAGE_PAYOFF
+      payoffs[u] /= degrees[u];
+#endif
     }
     // calculate G(j, t)
     T[D] = T[C] = 0.;
