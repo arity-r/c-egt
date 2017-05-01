@@ -42,12 +42,38 @@ for(topology in c('sl', 'rrg', 'ba')) {
   }
 }
 
-#result.data$mutation = as.factor(result.data$mutation)
-ggplot(result.data[result.data$topology=='ba',], aes(j, G, colour=mutation)) +
+result.data.sl <- result.data[result.data$topology=='sl',]
+result.data.sl$G <- result.data.sl$G * 100
+result.data.rrg <- result.data[result.data$topology=='rrg',]
+result.data.rrg$G <- result.data.rrg$G * 100
+result.data.ba <- result.data[result.data$topology=='ba',]
+result.data.ba$G <- result.data.ba$G * 100
+
+ggplot(result.data.sl, aes(j, G, colour=mutation)) +
+  ggtitle('SL (benefit=1.005, beta=10)') +
+  scale_x_continuous(expression(italic(j)),
+                     breaks=seq(0, 1, 0.2)) +
+  scale_y_continuous(expression(paste(italic(G(j)) ~~ '(' %*% 10^-2, ')')),
+                     breaks=seq(-3, 1, 1.0),
+                     limit=c(-3.5, 1.5),
+                     labels=function(x) sprintf('%1.1f', x)) +
+  geom_line()
+
+ggplot(result.data.rrg, aes(j, G, colour=mutation)) +
+  ggtitle('RRG (benefit=1.005, beta=10)') +
+  scale_x_continuous(expression(italic(j)),
+                     breaks=seq(0, 1, 0.2)) +
+  scale_y_continuous(expression(paste(italic(G(j)) ~~ '(' %*% 10^-2, ')')),
+                     breaks=seq(-3, 1, 1.0),
+                     limit=c(-3.5, 1.5),
+                     labels=function(x) sprintf('%1.1f', x)) +
+  geom_line()
+
+ggplot(result.data.ba, aes(j, G, colour=mutation)) +
   ggtitle('BA (benefit=1.25, beta=0.1)') +
-  scale_x_continuous(expression(italic('j'))) +
-  scale_y_continuous(expression(italic('G'))) +
-  #geom_smooth(se=F) +
-  #geom_raster()
-  #geom_point()
+  scale_x_continuous(expression(italic(j)),
+                     breaks=seq(0, 1, 0.2)) +
+  scale_y_continuous(expression(paste(italic(G(j)) ~~ '(' %*% 10^-2, ')')),
+                     breaks=seq(-1, 1, 0.5),
+                     limit=c(-1, 1)) +
   geom_line()
