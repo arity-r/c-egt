@@ -2,6 +2,7 @@
 graphset/*
 result/*
 result*
+time-evolution.csv
 
 # Prerequisites
 *.d

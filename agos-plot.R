@@ -31,7 +31,7 @@ make.result = function (nvparams) {
 
 result.data <- data.frame()
 for(topology in c('sl', 'rrg', 'ba')) {
-  for(benefit in c(1.005, 1.25)) {
+  for(benefit in c(1.005, 1.15, 1.25, 1.35)) {
     for(beta in c(10, 0.1)) {
       for(mutation in c(0, 1e-5, 1e-4, 0.001, 0.01)) {
         nv = c(benefit=benefit, beta=beta, mutation=mutation, topology=topology)
@@ -69,8 +69,8 @@ ggplot(result.data.rrg, aes(j, G, colour=mutation)) +
                      labels=function(x) sprintf('%1.1f', x)) +
   geom_line()
 
-ggplot(result.data.ba, aes(j, G, colour=mutation)) +
-  ggtitle('BA (benefit=1.25, beta=0.1)') +
+ggplot(result.data.ba[result.data.ba$benefit==1.35,], aes(j, G, colour=mutation)) +
+  ggtitle('BA (benefit=1.35, beta=0.1)') +
   scale_x_continuous(expression(italic(j)),
                      breaks=seq(0, 1, 0.2)) +
   scale_y_continuous(expression(paste(italic(G(j)) ~~ '(' %*% 10^-2, ')')),

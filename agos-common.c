@@ -132,19 +132,24 @@ int main(int argc, char* argv[]) {
   }
 
   double payoffs[arraysize];
-
+  int j;
+#ifndef TIME_EVOLUTION
   double Gsum[N+1];
   int Gnum[N+1];
-  int j;
   for(j = 0; j <= N; j++) {
     Gsum[j] = 0.;
     Gnum[j] = 0;
   }
-
+#endif
   // run simulation
   int vi, su, sv, step;
-  double pu, pv, Tu, T[2];
+  double pu, pv;
   double prob, rval;
+#ifdef TIME_EVOLUTION
+  double f;
+#else
+  double Tu, T[2];
+#endif
   for(step = 0; step < Lambda; step++) {
     // calculate payoffs
     for(u = 0; u < N; u++) {
@@ -160,6 +165,7 @@ int main(int argc, char* argv[]) {
       payoffs[u] /= degrees[u];
 #endif
     }
+#ifndef TIME_EVOLUTION
     // calculate G(j, t)
     T[D] = T[C] = 0.;
     for(u = 0; u < N; u++) {
@@ -179,6 +185,14 @@ int main(int argc, char* argv[]) {
     for(u = 0; u < N; u++) j += strategies[u];
     Gsum[j] += (T[D] - T[C]) / N;
     Gnum[j] += 1;
+#else
+    if(step % N == 0) {
+      j = 0;
+      for(u = 0; u < N; u++) j += strategies[u];
+      f = (double)j / N;
+      fwrite(&f, sizeof(double), 1, stdout);
+    }
+#endif
     // update one strategy
     u = rand() % N;
     vi = rand() % degrees[u];
@@ -199,10 +213,17 @@ int main(int argc, char* argv[]) {
   }
 
   // print result
+#ifndef TIME_EVOLUTION
   //for(j = 0; j <= N; j++) printf("%f\n", Gsum[j] / Gnum[j]);
   //for(j = 0; j <= N; j++) printf("%4d %6d % 1.6f\n", j, Gnum[j], Gsum[j]);
   fwrite(Gnum, sizeof(int), N+1, stdout);
   fwrite(Gsum, sizeof(double), N+1, stdout);
+#else
+  j = 0;
+  for(u = 0; u < N; u++) j += strategies[u];
+  f = (double)j / N;
+  fwrite(&f, sizeof(double), 1, stdout);
+#endif
 
   return 0;
 }

@@ -47,7 +47,7 @@ def run_experiment_part(args):
                          stdin=subprocess.PIPE,
                          stdout=subprocess.PIPE)
     result_raw = p.communicate(input=graphcache)[0]
-    result = unpack('='+'d'*((1000000-1)//population+1), result_raw)
+    result = unpack('='+'d'*((1000000-1)//population+2), result_raw)
 
     with lock:
         with open(result_file, 'a') as f:
@@ -59,7 +59,7 @@ def run_experiment_part(args):
 if __name__ == '__main__':
     with open(result_file, 'w') as f:
         f.write('topology,payoff,benefit,beta,mutation,init_c,sim,t,c\n')
-    nsim = 1
+    nsim = 1000
     benefit_of = lambda t: 1.25 if t == 'ba' else 1.005
     beta_of = lambda t: 0.1 if t == 'ba' else 10
     topology = ['rrg', 'sl', 'ba']
