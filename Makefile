@@ -12,10 +12,10 @@ graphgen.out: graphgen.c
 	$(CC) $(CFLAGS) -o $@ $< -I$(IDIR) -L$(LDIR) $(LIBS)
 
 agos-common.out: agos-common.c
-	$(CC) $(CFLAGS) -o $@ $< -I$(IDIR) -L$(LDIR) $(LIBS)
+	$(CC) $(CFLAGS) -o $@ $< -I$(IDIR) -L$(LDIR) $(LIBS) -DMEAN_FIELD
 
 agos-common-avr.out: agos-common.c
-	$(CC) $(CFLAGS) -o $@ $< -I$(IDIR) -L$(LDIR) $(LIBS) -DUSE_AVERAGE_PAYOFF
+	$(CC) $(CFLAGS) -o $@ $< -I$(IDIR) -L$(LDIR) $(LIBS) -DMEAN_FIELD -DUSE_AVERAGE_PAYOFF
 
 time-evolution: time-evolution-acc.out time-evolution-avr.out
 

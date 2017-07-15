@@ -179,7 +179,11 @@ int main(int argc, char* argv[]) {
         pv = payoffs[v];
         Tu += 1. / (1. + exp(-beta * (pv - pu)));
       }
-      T[su] += Tu / degrees[u];
+      Tu /= degrees[u];
+#ifdef MEAN_FIELD
+      Tu = (1-mutation_rate)*Tu + mutation_rate*(1 - Tu);
+#endif
+      T[su] += Tu;
     }
     j = 0;
     for(u = 0; u < N; u++) j += strategies[u];
