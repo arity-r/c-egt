@@ -211,7 +211,7 @@ int main(int argc, char* argv[]) {
     // mutation
     rval = (double) rand() / RAND_MAX;
     if(rval < mutation_rate) {
-      u = rand() % N;
+      // u = rand() % N;
       strategies[u] = 1 - strategies[u];
     }
   }
