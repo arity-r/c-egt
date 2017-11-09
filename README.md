@@ -75,3 +75,24 @@ Then, run following to plot result.
 ```r
 ggplot(result.data, aes(j, G, colour=mutation)) + geom_line()
 ```
+
+### FoC with Time
+`time-evolution.py` calculates FoC for each time step and save to `time-evolution.csv`.
+The program runs on following settings.
+* All topologies (RRG, SL, and BA)
+* Two initial FoCs (0.2 and 0.8)
+* Two mutation probabilities (0 and 0.01)
+* Two payoff functions (accumulated and average)
+* 1000000 time steps per a sim.
+* 1000 simulations
+
+Columns of `time-evolution.csv` are
+1. Network topology
+2. Payoff function ('acc'umulated or 'avr'age)
+3. Temptation to defect
+4. Intensity of selection
+5. Mutation probability
+6. Initial FoC
+7. Simulation number (1-1000)
+8. Timestep
+9. FoC on timestep
